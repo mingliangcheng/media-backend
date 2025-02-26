@@ -62,6 +62,7 @@ const log4jsConfig = {
     info: { appenders: ['console', 'app', 'errors'], level: 'info' },
     access: { appenders: ['console', 'app', 'errors'], level: 'info' },
     http: { appenders: ['access'], level: 'DEBUG' },
+    errors: { appenders: ['access', 'errors'], level: 'ERROR' },
   },
   pm2: true, // 使用 pm2 来管理项目时，打开
   pm2InstanceVar: 'INSTANCE_ID', // 会根据 pm2 分配的 id 进行区分，以免各进程在写日志时造成冲突

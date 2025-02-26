@@ -1,5 +1,5 @@
 /**
- * @description 异常过滤器
+ * @description 所有异常拦截
  */
 import {
   ArgumentsHost,
@@ -8,12 +8,12 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { AjaxResult } from '../common/response/ajaxResult';
 import { Response, Request } from 'express';
+import { AjaxResult } from '../common/response/ajaxResult';
 import { Log } from '../share/log4js';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+@Catch()
+export class AnyExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -22,14 +22,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string;
-    if (exception instanceof HttpException) {
-      const response = exception.getResponse();
-      message = (response as any)?.message ?? response;
-    } else {
-      message = `${exception}`;
-    }
-    response.status(status).json(AjaxResult.error(message, status));
+    response
+      .status(status)
+      .json(AjaxResult.error(`Server Error: ${exception}`, status));
     const logFormat = ` <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     Request original url: ${request.originalUrl}
     Method: ${request.method}

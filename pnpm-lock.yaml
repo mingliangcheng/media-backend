@@ -24,11 +24,14 @@ dependencies:
     specifier: ^11.0.0
     version: 11.0.0(@nestjs/common@11.0.10)(@nestjs/core@11.0.10)(reflect-metadata@0.2.2)(rxjs@7.8.1)(typeorm@0.3.20)
   chalk:
-    specifier: ^5.4.1
-    version: 5.4.1
+    specifier: ^4.1.2
+    version: 4.1.2
   cross-env:
     specifier: ^7.0.3
     version: 7.0.3
+  js-yaml:
+    specifier: ^4.1.0
+    version: 4.1.0
   log4js:
     specifier: ^6.9.1
     version: 6.9.1
@@ -79,6 +82,9 @@ devDependencies:
   '@types/jest':
     specifier: ^29.5.14
     version: 29.5.14
+  '@types/js-yaml':
+    specifier: ^4.0.9
+    version: 4.0.9
   '@types/node':
     specifier: ^22.10.7
     version: 22.13.4
@@ -1835,6 +1841,10 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
+  /@types/js-yaml@4.0.9:
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==, tarball: https://registry.npmmirror.com/@types/js-yaml/-/js-yaml-4.0.9.tgz}
+    dev: true
+
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==, tarball: https://registry.npmmirror.com/@types/json-schema/-/json-schema-7.0.15.tgz}
     dev: true
@@ -2391,7 +2401,6 @@ packages:
 
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==, tarball: https://registry.npmmirror.com/argparse/-/argparse-2.0.1.tgz}
-    dev: true
 
   /array-timsort@1.0.3:
     resolution: {integrity: sha512-/+3GRL7dDAGEfM6TseQk/U+mi18TU2Ms9I3UlLdUMhz2hbvGNTKdj9xniwXfUqgYhHxRx0+8UnKkvlNwVU+cWQ==, tarball: https://registry.npmmirror.com/array-timsort/-/array-timsort-1.0.3.tgz}
@@ -2682,11 +2691,6 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-
-  /chalk@5.4.1:
-    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==, tarball: https://registry.npmmirror.com/chalk/-/chalk-5.4.1.tgz}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: false
 
   /char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==, tarball: https://registry.npmmirror.com/char-regex/-/char-regex-1.0.2.tgz}
@@ -4599,7 +4603,6 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
-    dev: true
 
   /jsesc@3.1.0:
     resolution: {integrity: sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==, tarball: https://registry.npmmirror.com/jsesc/-/jsesc-3.1.0.tgz}

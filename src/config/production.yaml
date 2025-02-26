@@ -1,0 +1,12 @@
+# 服务
+http:
+  port: 3000
+
+# 数据库信息
+db:
+  type: mysql
+  host: localhost
+  port: 3306
+  username: root
+  password: c2011020@
+  database: test

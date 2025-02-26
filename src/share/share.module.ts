@@ -5,6 +5,7 @@ import * as process from 'node:process';
 import { ResTransformInterceptor } from '../interceptor/res-transform.interceptor';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '../filter/http-exception.filter';
+import { AnyExceptionFilter } from '../filter/any-exception.filter';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +36,10 @@ import { HttpExceptionFilter } from '../filter/http-exception.filter';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AnyExceptionFilter,
     },
   ],
 })
