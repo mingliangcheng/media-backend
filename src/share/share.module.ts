@@ -6,6 +6,11 @@ import { ResTransformInterceptor } from '../interceptor/res-transform.intercepto
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '../filter/http-exception.filter';
 import { AnyExceptionFilter } from '../filter/any-exception.filter';
+import { User } from '../modules/user/entities/user.entity';
+import { Profile } from '../modules/user/entities/profile.entity';
+import { Photo } from '../modules/user/entities/photo.entity';
+import { RedisModule } from './redis/redis.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,9 +27,12 @@ import { AnyExceptionFilter } from '../filter/any-exception.filter';
         database: configService.get<string>('MYSQL_DATABASE'),
         autoLoadEntities: true,
         synchronize: true,
+        logging: true,
+        entities: [User, Profile, Photo],
       }),
       inject: [ConfigService],
     }),
+    RedisModule,
   ],
   providers: [
     // 响应拦截器
