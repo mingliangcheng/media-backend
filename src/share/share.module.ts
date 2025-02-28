@@ -10,6 +10,7 @@ import { User } from '../modules/user/entities/user.entity';
 import { Profile } from '../modules/user/entities/profile.entity';
 import { Photo } from '../modules/user/entities/photo.entity';
 import { RedisModule } from './redis/redis.module';
+import { ShareService } from './share.service';
 
 @Module({
   imports: [
@@ -49,6 +50,8 @@ import { RedisModule } from './redis/redis.module';
       provide: APP_FILTER,
       useClass: AnyExceptionFilter,
     },
+    ShareService,
   ],
+  exports: [ShareService],
 })
 export class ShareModule {}
