@@ -33,8 +33,10 @@ export class UserService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(username: string) {
+    return await this.userRepository.findOne({
+      where: { name: username },
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

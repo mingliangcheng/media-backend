@@ -17,6 +17,9 @@ export class User {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  password: string;
+
   @OneToOne(() => Profile, (profile) => profile.user, {
     createForeignKeyConstraints: true,
   })

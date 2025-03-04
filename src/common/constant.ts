@@ -6,3 +6,5 @@ export enum DbConfigEnum {
   MYSQL_PASSWORD = 'password',
   MYSQL_DATABASE = 'database',
 }
+
+export const IS_PUBLIC_KEY = 'isPublic';

@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'node:process';
 import { ResTransformInterceptor } from '../interceptor/res-transform.interceptor';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '../filter/http-exception.filter';
 import { AnyExceptionFilter } from '../filter/any-exception.filter';
 import { User } from '../modules/user/entities/user.entity';
@@ -11,6 +11,8 @@ import { Profile } from '../modules/user/entities/profile.entity';
 import { Photo } from '../modules/user/entities/photo.entity';
 import { RedisModule } from './redis/redis.module';
 import { ShareService } from './share.service';
+import { AuthGuard } from '../guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -50,7 +52,13 @@ import { ShareService } from './share.service';
       provide: APP_FILTER,
       useClass: AnyExceptionFilter,
     },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     ShareService,
+    ConfigService,
+    JwtService,
   ],
   exports: [ShareService],
 })
