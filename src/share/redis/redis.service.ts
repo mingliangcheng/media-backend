@@ -7,7 +7,7 @@ export class RedisService {
   constructor(@InjectRedis() private readonly redis: Redis) {}
 
   async getKey(key: string): Promise<any> {
-    await this.redis.get(key);
+    return this.redis.get(key);
   }
 
   async setKey(key: string, value: string, expire?: number): Promise<void> {
@@ -24,5 +24,9 @@ export class RedisService {
 
   async exists(key: string) {
     return this.redis.exists(key);
+  }
+
+  async getAllKeys(): Promise<string[]> {
+    return this.redis.keys('*');
   }
 }

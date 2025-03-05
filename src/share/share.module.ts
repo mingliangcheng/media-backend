@@ -11,8 +11,8 @@ import { Profile } from '../modules/user/entities/profile.entity';
 import { Photo } from '../modules/user/entities/photo.entity';
 import { RedisModule } from './redis/redis.module';
 import { ShareService } from './share.service';
-import { AuthGuard } from '../guards/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from '../modules/auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ import { JwtService } from '@nestjs/jwt';
     },
     {
       provide: APP_GUARD,
-      useClass: AuthGuard,
+      useClass: JwtAuthGuard,
     },
     ShareService,
     ConfigService,

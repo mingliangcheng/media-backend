@@ -9,6 +9,8 @@ import { Photo } from '../user/entities/photo.entity';
 import { Profile } from '../user/entities/profile.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -17,15 +19,15 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: '1h',
-        },
+        // signOptions: {
+        //   expiresIn: '1h',
+        // },
       }),
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User, Profile, Photo]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
