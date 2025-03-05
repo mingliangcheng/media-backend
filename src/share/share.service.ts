@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as CryptoJS from 'crypto-js';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuid } from 'uuid';
 @Injectable()
 export class ShareService {
   private readonly cryptoKey: string;
@@ -22,5 +23,14 @@ export class ShareService {
   // Md5加密
   md5Encrypt(msg: string) {
     return CryptoJS.MD5(msg).toString();
+  }
+
+  /**
+   * @description: 生成一个UUID
+   * @param {*}
+   * @return {*}
+   */
+  generateUUID(): string {
+    return uuid();
   }
 }

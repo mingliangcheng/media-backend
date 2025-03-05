@@ -15,6 +15,8 @@ async function bootstrap() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(logger);
+  app.enableCors();
+  app.use;
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

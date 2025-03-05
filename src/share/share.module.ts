@@ -20,6 +20,7 @@ import { JwtAuthGuard } from '../modules/auth/jwt-auth.guard';
       envFilePath: [`.env.${process.env['NODE_ENV']}`],
       isGlobal: true,
     }),
+
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         type: configService.get<any>('MYSQL_TYPE'),
