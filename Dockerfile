@@ -1,5 +1,7 @@
 FROM node:23
 
+RUN git pull
+
 WORKDIR /app
 
 COPY package*.json ./
