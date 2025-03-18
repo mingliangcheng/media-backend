@@ -1,11 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity()
-export class Photo {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Photo extends BaseEntity {
   @Column()
   name: string;
 

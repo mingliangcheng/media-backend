@@ -1,19 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Photo } from './photo.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity({ name: 'user' })
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity {
   @Column()
   name: string;
 

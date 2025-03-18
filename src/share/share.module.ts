@@ -13,6 +13,7 @@ import { RedisModule } from './redis/redis.module';
 import { ShareService } from './share.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from '../modules/auth/jwt-auth.guard';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -30,9 +31,11 @@ import { JwtAuthGuard } from '../modules/auth/jwt-auth.guard';
         password: configService.get<string>('MYSQL_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: process.env['NODE_ENV'] === 'development',
         logging: true,
         entities: [User, Profile, Photo],
+        timezone: '+08:00',
+        namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
     }),
