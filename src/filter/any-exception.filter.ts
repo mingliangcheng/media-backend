@@ -22,9 +22,7 @@ export class AnyExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    response
-      .status(status)
-      .json(AjaxResult.error(`Server Error: ${exception}`, status));
+    response.status(status).json(AjaxResult.error(`${exception}`, status));
     const logFormat = ` <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     Request original url: ${request.originalUrl}
     Method: ${request.method}

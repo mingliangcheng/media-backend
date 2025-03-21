@@ -1,55 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Profile } from './entities/profile.entity';
-import { CreatePhotoDto } from './dto/create-photo.dto';
-import { Photo } from './entities/photo.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
-    @InjectRepository(Photo) private photoRepository: Repository<Photo>,
   ) {}
-  async create(createUserDto: CreateUserDto) {
-    const profile = new Profile();
-    profile.name = createUserDto.profile.name;
-    await this.profileRepository.save(profile);
-    const user = new User();
-    user.name = createUserDto.name;
-    user.profile = profile;
-    await this.userRepository.save(user);
-    return user.id;
+
+  // 根据手机号查询用户
+  async findUserByTelephone(phone: string) {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.telephone = :telephone', {
+        telephone: phone,
+      })
+      .getOne();
   }
 
-  async findUserById(id: number) {
-    return await this.userRepository.findOne({
-      where: { id },
-      relations: ['profile'],
-    });
+  // 根据用户名查询用户
+  async findUserByUsername(username: string) {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username = :username', {
+        username,
+      })
+      .getOne();
+  }
+
+  // 创建用户
+  async createUser(user: User) {
+    const result = await this.userRepository
+      .createQueryBuilder('user')
+      .insert()
+      .into(User)
+      .values([user])
+      .execute();
+    return result.raw.insertId;
   }
 
   async findOne(username: string) {
-    return await this.userRepository.findOne({
-      where: { name: username },
-    });
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  async insertPhoto(createPhotoDto: CreatePhotoDto) {
-    const photo = new Photo();
-    photo.name = createPhotoDto.name;
-    return await this.photoRepository.save(photo);
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .getOne();
   }
 }

@@ -1,22 +1,32 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
-import { Profile } from './profile.entity';
-import { Photo } from './photo.entity';
+import { Column, Entity } from 'typeorm';
 import { BaseEntity } from 'src/common/base.entity';
 
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
-  @Column()
-  name: string;
+  @Column({ comment: '用户名', length: 50 })
+  username: string;
 
-  @Column({ nullable: true })
+  @Column({ comment: '密码' })
   password: string;
 
-  @OneToOne(() => Profile, (profile) => profile.user, {
-    createForeignKeyConstraints: true,
-  })
-  @JoinColumn()
-  profile: Profile;
+  @Column({ comment: '手机号', length: 15 })
+  telephone: string;
 
-  @OneToMany(() => Photo, (photo) => photo.user)
-  photos: Photo[];
+  @Column({ comment: '邮箱', length: 50, nullable: true })
+  email: string;
+
+  @Column({ comment: '性别', nullable: true })
+  gender: number;
+
+  @Column({ comment: '生日', nullable: true })
+  birthday: string;
+
+  @Column({ comment: '头像', nullable: true })
+  avatar: string;
+
+  @Column({ comment: '用户等级', default: 1 })
+  level: number;
+
+  @Column({ comment: '签名', length: 150, nullable: true })
+  signature: string;
 }

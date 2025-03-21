@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       enableDebugMessages: true,
-      disableErrorMessages: true,
+      disableErrorMessages: false,
       transform: true,
     }),
   );
@@ -16,7 +16,6 @@ async function bootstrap() {
   app.use(express.urlencoded({ extended: true }));
   app.use(logger);
   app.enableCors();
-  app.use;
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

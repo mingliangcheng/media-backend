@@ -8,6 +8,7 @@ import { UploadModule } from './modules/upload/upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { MinioModule } from './modules/minio/minio.module';
+import { SongModule } from './modules/song/song.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MinioModule } from './modules/minio/minio.module';
       serveRoot: '/upload',
     }),
     MinioModule,
+    SongModule,
   ],
   controllers: [],
   providers: [TestService],

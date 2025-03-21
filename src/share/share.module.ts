@@ -6,9 +6,6 @@ import { ResTransformInterceptor } from '../interceptor/res-transform.intercepto
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '../filter/http-exception.filter';
 import { AnyExceptionFilter } from '../filter/any-exception.filter';
-import { User } from '../modules/user/entities/user.entity';
-import { Profile } from '../modules/user/entities/profile.entity';
-import { Photo } from '../modules/user/entities/photo.entity';
 import { RedisModule } from './redis/redis.module';
 import { ShareService } from './share.service';
 import { JwtService } from '@nestjs/jwt';
@@ -33,7 +30,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
         autoLoadEntities: true,
         synchronize: process.env['NODE_ENV'] === 'development',
         logging: true,
-        entities: [User, Profile, Photo],
+        entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
         timezone: '+08:00',
         namingStrategy: new SnakeNamingStrategy(),
       }),
@@ -47,14 +44,14 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       provide: APP_INTERCEPTOR,
       useClass: ResTransformInterceptor,
     },
+    {
+      provide: APP_FILTER,
+      useClass: AnyExceptionFilter,
+    },
     // 异常过滤器
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: AnyExceptionFilter,
     },
     {
       provide: APP_GUARD,

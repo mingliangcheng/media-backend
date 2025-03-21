@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
@@ -19,6 +20,9 @@ export abstract class BaseEntity {
   @DeleteDateColumn()
   deleteTime: Date;
 
-  @VersionColumn()
+  @VersionColumn({ comment: '版本' })
   version: number;
+
+  @Column({ comment: '删除，0未删除 1已删除', default: 0 })
+  isDeleted: number;
 }

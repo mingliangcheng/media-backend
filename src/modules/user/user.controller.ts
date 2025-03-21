@@ -1,16 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { CreatePhotoDto } from './dto/create-photo.dto';
 import { RedisService } from '../../share/redis/redis.service';
+import { validateTelephone } from '../../utils/validate';
 
 @Controller('user')
 export class UserController {
@@ -19,23 +10,15 @@ export class UserController {
     private readonly redisService: RedisService,
   ) {}
 
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto);
-  }
-
-  @Get()
-  async findAll(@Query('id') id: number) {
-    return await this.userService.findUserById(id);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.redisService.setKey('userId', id);
-  }
-
-  @Post('/photo')
-  async createPhoto(@Body() createPhotoDto: CreatePhotoDto) {
-    return await this.userService.insertPhoto(createPhotoDto);
+  /**
+   * 根据手机号查询用户
+   */
+  @Post('/findUserByPhone')
+  findUserByPhone(@Body('telephone') telephone: string) {
+    if (!validateTelephone(telephone)) {
+      throw new BadRequestException('手机号格式不正确');
+    }
+    // 查询用户
+    return this.userService.findUserByTelephone(telephone);
   }
 }
