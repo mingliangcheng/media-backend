@@ -3,19 +3,18 @@ import {
   Controller,
   HttpException,
   HttpStatus,
-  InternalServerErrorException,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
 import { Public } from '../../decorator/auth.decorator';
 import { LocalAuthGuard } from './local-auth.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
 import { ShareService } from '../../share/share.service';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -64,4 +63,33 @@ export class AuthController {
   /**
    * 用户注册，手机号验证码登录，直接注册
    */
+
+  /**
+   * 修改密码
+   */
+  @Post('/modifyPassword')
+  async modifyPassword(@Body() updatePasswordDto: UpdatePasswordDto) {
+    const user = await this.userService.findOne(updatePasswordDto.username);
+    if (!user) {
+      throw new HttpException('用户名不存在', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    if (
+      this.shareService.md5Encrypt(updatePasswordDto.oldPassword) !==
+      user.password
+    ) {
+      throw new HttpException('旧密码不正确', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    if (updatePasswordDto.newPassword === updatePasswordDto.oldPassword) {
+      throw new HttpException(
+        '新密码与旧密码相同',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    const result = await this.userService.updatePassword(updatePasswordDto);
+    if (result.affected) {
+      return null;
+    } else {
+      throw new HttpException('修改失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsPhoneNumber, Matches } from 'class-validator';
+import { IsNotEmpty, Matches } from 'class-validator';
 
-export class RegisterUserDto {
+export class UpdatePasswordDto {
   @IsNotEmpty()
   username: string;
 
@@ -11,8 +11,8 @@ export class RegisterUserDto {
       message: '密码强度不符合要求',
     },
   )
-  password: string;
+  newPassword: string;
 
-  @IsPhoneNumber('CN')
-  telephone: string;
+  @IsNotEmpty()
+  oldPassword: string;
 }

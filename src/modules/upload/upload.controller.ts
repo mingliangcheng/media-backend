@@ -16,6 +16,8 @@ import {
 import { Log } from '../../share/log4js';
 import { MinioService } from '../minio/minio.service';
 import { ShareService } from '../../share/share.service';
+import { SongService } from '../song/song.service';
+import { Avatar } from '../song/entities/avatar.entity';
 
 @Controller('upload')
 export class UploadController {
@@ -23,10 +25,14 @@ export class UploadController {
     private readonly uploadService: UploadService,
     private readonly minioService: MinioService,
     private readonly shareService: ShareService,
+    private readonly songService: SongService,
   ) {}
 
-  @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  /**
+   *上传歌手头像
+   */
+  @Post('/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar(
     @UploadedFile(
       new ParseFilePipeBuilder()
@@ -40,7 +46,6 @@ export class UploadController {
         }),
     )
     file: Express.Multer.File,
-    @Body() formDto: any,
   ) {
     const dateNow = new Date();
     const formatDay = `${dateNow.getFullYear()}-${dateNow.getMonth() + 1 < 9 ? '0' + (dateNow.getMonth() + 1) : dateNow.getMonth() + 1}-${dateNow.getDate() < 10 ? '0' + dateNow.getDate() : dateNow.getDate()}`;
@@ -52,8 +57,13 @@ export class UploadController {
       file.size,
       file.mimetype,
     );
+    const avatar = new Avatar();
+    avatar.avatarUrl = data.url;
+    avatar.originName = file.originalname;
+    const result = await this.songService.saveAvatar(avatar);
     return {
-      data,
+      url: data.url,
+      id: result.raw.insertId,
     };
   }
 

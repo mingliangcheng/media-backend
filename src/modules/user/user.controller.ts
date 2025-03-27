@@ -15,6 +15,9 @@ export class UserController {
    */
   @Post('/findUserByPhone')
   findUserByPhone(@Body('telephone') telephone: string) {
+    if (!telephone) {
+      throw new BadRequestException('手机号不能为空');
+    }
     if (!validateTelephone(telephone)) {
       throw new BadRequestException('手机号格式不正确');
     }
