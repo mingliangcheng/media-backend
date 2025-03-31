@@ -8,13 +8,14 @@ import { SongModule } from '../song/song.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Avatar } from '../song/entities/avatar.entity';
 import { SingerCategory } from '../song/entities/singerCategory.entity';
+import { Singer } from '../song/entities/singer.entity';
 
 @Module({
   imports: [
     MinioModule,
     ShareModule,
     SongModule,
-    TypeOrmModule.forFeature([Avatar, SingerCategory]),
+    TypeOrmModule.forFeature([Avatar, SingerCategory, Singer]),
   ],
   controllers: [UploadController],
   providers: [UploadService, SongService],

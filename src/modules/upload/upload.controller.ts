@@ -60,6 +60,7 @@ export class UploadController {
     const avatar = new Avatar();
     avatar.avatarUrl = data.url;
     avatar.originName = file.originalname;
+    avatar.fileName = filename;
     const result = await this.songService.saveAvatar(avatar);
     return {
       url: data.url,
