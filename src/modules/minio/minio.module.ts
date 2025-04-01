@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MinioService } from './minio.service';
 import * as minio from 'minio';
 import { ConfigService } from '@nestjs/config';
+import { ShareService } from '../../share/share.service';
 
 @Module({
   controllers: [],
@@ -20,6 +21,7 @@ import { ConfigService } from '@nestjs/config';
       },
       inject: [ConfigService],
     },
+    ShareService,
   ],
   exports: [MinioService],
 })

@@ -2,6 +2,8 @@ import { Body, Controller, ParseIntPipe, Post } from '@nestjs/common';
 import { SongService } from './song.service';
 import { AddSingerCategoryDto } from './dto/addSingerCategory.dto';
 import { AddSignerDto } from './dto/addSigner.dto';
+import { QuerySingerDto } from './dto/querySinger.dto';
+import { QuerySongDto } from './dto/querySong.dto';
 
 @Controller('song')
 export class SongController {
@@ -41,7 +43,7 @@ export class SongController {
    */
   @Post('/querySingerInfoById')
   async querySingerInfoById(@Body('id', ParseIntPipe) id: number) {
-    return this.songService.querySingerInfoById(id);
+    return this.songService.querySingerInfo(id);
   }
 
   /**
@@ -53,5 +55,21 @@ export class SongController {
     @Body('pageSize', ParseIntPipe) pageSize: number,
   ) {
     return await this.songService.queryAllSingers(pageNum, pageSize);
+  }
+
+  /**
+   * 根据分类id查询歌手
+   */
+  @Post('/querySingersByCategoryId')
+  async querySingersByCategoryId(@Body() querySingerDto: QuerySingerDto) {
+    return await this.songService.querySingersByCategoryId(querySingerDto);
+  }
+
+  /**
+   * 根据歌手id查询音乐
+   */
+  @Post('/querySongsBySingerId')
+  async querySongsBySingerId(@Body() querySongDto: QuerySongDto) {
+    return await this.songService.querySongsBySingerId(querySongDto);
   }
 }

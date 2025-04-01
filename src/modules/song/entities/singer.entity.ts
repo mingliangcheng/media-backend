@@ -1,7 +1,15 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../../common/base.entity';
 import { SingerCategory } from './singerCategory.entity';
 import { Avatar } from './avatar.entity';
+import { Song } from './song.entity';
 
 @Entity({ comment: '歌手表' })
 export class Singer extends BaseEntity {
@@ -18,4 +26,7 @@ export class Singer extends BaseEntity {
   @OneToOne(() => Avatar, (avatar) => avatar.singer)
   @JoinColumn()
   avatar: Avatar;
+
+  @OneToMany(() => Song, (song) => song.singer)
+  songs: Song[];
 }

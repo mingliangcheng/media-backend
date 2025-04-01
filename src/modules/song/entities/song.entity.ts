@@ -1,26 +1,29 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base.entity';
+import { Singer } from './singer.entity';
+import { SongFile } from './songFile.entity';
 
 @Entity({ name: 'song', comment: '歌曲表' })
 export class Song extends BaseEntity {
   @Column({ comment: '歌曲标题' })
   title: string;
 
-  @Column({ comment: '封面地址' })
+  @Column({ comment: '封面地址', default: '' })
   coverUrl: string;
 
-  @Column({ comment: '时长:s' })
+  @Column({ comment: '时长:s', default: 0 })
   duration: number;
 
-  @Column({ comment: '专辑id' })
-  albumId: string;
+  @Column({ comment: '歌词id', default: 0 })
+  lyricId: number;
 
-  @Column({ comment: '歌手id' })
-  singerId: string;
+  @Column({ comment: '文件大小' })
+  size: number;
 
-  @Column({ comment: '歌词id' })
-  lyricId: string;
+  @ManyToOne(() => Singer, (singer) => singer.songs)
+  singer: Singer;
 
-  @Column({ comment: '文件路径' })
-  filePath: string;
+  @OneToOne(() => SongFile, (songFile) => songFile.song)
+  @JoinColumn()
+  file: SongFile;
 }

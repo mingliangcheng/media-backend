@@ -8,6 +8,7 @@ import { Collect } from './entities/collect.entity';
 import { History } from './entities/history.entity';
 import { SingerCategory } from './entities/singerCategory.entity';
 import { Avatar } from './entities/avatar.entity';
+import { SongFile } from './entities/songFile.entity';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Avatar } from './entities/avatar.entity';
       History,
       SingerCategory,
       Avatar,
+      SongFile,
     ]),
   ],
   controllers: [SongController],

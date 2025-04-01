@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  HttpException,
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
@@ -9,15 +10,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
-import { Log } from '../../share/log4js';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { MinioService } from '../minio/minio.service';
 import { ShareService } from '../../share/share.service';
 import { SongService } from '../song/song.service';
 import { Avatar } from '../song/entities/avatar.entity';
+import { formatDay } from '../../utils/date';
+import { ConfigService } from '@nestjs/config';
+import { AddSongDto } from '../song/dto/addSong.dto';
+import { SongFile } from '../song/entities/songFile.entity';
+import { Song } from '../song/entities/song.entity';
 
 @Controller('upload')
 export class UploadController {
@@ -26,6 +28,7 @@ export class UploadController {
     private readonly minioService: MinioService,
     private readonly shareService: ShareService,
     private readonly songService: SongService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -47,15 +50,10 @@ export class UploadController {
     )
     file: Express.Multer.File,
   ) {
-    const dateNow = new Date();
-    const formatDay = `${dateNow.getFullYear()}-${dateNow.getMonth() + 1 < 9 ? '0' + (dateNow.getMonth() + 1) : dateNow.getMonth() + 1}-${dateNow.getDate() < 10 ? '0' + dateNow.getDate() : dateNow.getDate()}`;
-    const filename = `${formatDay}/${Date.now()}-${this.shareService.generateUUID()}.${file.originalname}`;
+    const filename = `${formatDay()}/${Date.now()}-${this.shareService.generateUUID()}.${file.originalname}`;
     const data = await this.minioService.uploadFile(
-      'test',
-      filename,
+      this.configService.get<string>('MINIO_BUCKET_NAME') as string,
       file,
-      file.size,
-      file.mimetype,
     );
     const avatar = new Avatar();
     avatar.avatarUrl = data.url;
@@ -68,28 +66,35 @@ export class UploadController {
     };
   }
 
-  @Post('/multipleUploads')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      {
-        name: 'file',
-        maxCount: 1,
-      },
-      {
-        name: 'avatar',
-        maxCount: 2,
-      },
-    ]),
-  )
-  uploadMultipleFile(
-    @UploadedFiles()
-    files: {
-      file: Express.Multer.File[];
-      avatar: Express.Multer.File[];
-    },
-    @Body() formDto: any,
+  @Post('/batchUploadMusic')
+  @UseInterceptors(FilesInterceptor('files', 20))
+  async uploadMultipleFile(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() addSongDto: AddSongDto,
   ) {
-    Log.error(files);
-    Log.error(formDto);
+    const singer = await this.songService.querySingerInfo(addSongDto.singerId);
+    if (!singer) {
+      throw new HttpException('歌手不存在', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    for (const file of files) {
+      const data = await this.minioService.uploadFile(
+        this.configService.get('MINIO_BUCKET_NAME') as string,
+        file,
+      );
+      const filename = `${formatDay()}/${Date.now()}-${this.shareService.generateUUID()}.${file.originalname}`;
+      const songFile = new SongFile();
+      songFile.fileName = filename;
+      songFile.fileUrl = data.url;
+      songFile.originName = file.originalname;
+      await this.songService.insertSongFile(songFile);
+
+      const song = new Song();
+      song.size = file.size;
+      song.title = file.originalname;
+      song.file = songFile;
+      song.singer = singer;
+      await this.songService.insertSong(song);
+    }
+    return null;
   }
 }

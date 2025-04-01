@@ -10,7 +10,7 @@ export class Avatar extends BaseEntity {
   @Column({ comment: '原始文件名称' })
   originName: string;
 
-  @Column({ comment: 'minio中文件名称' })
+  @Column({ comment: 'minio中文件名称', type: 'text' })
   fileName: string;
 
   @OneToOne(() => Singer, (singer) => singer.avatar)
